@@ -76,9 +76,33 @@ function modal(html, onMount) {
   return m;
 }
 
-const head = (eyebrow, title, lead = '') =>
-  `<div class="topbrand"><b>115<i>en.</i></b><span class="small muted">GO TO HAPPY LIFE</span></div>
-   <div class="pagehead"><span class="eyebrow">${eyebrow}</span><h1>${title}</h1>${lead ? `<p class="muted" style="margin:0">${lead}</p>` : ''}</div>`;
+const ICONS = {
+  home: '<path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"/>',
+  cert: '<rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="9" cy="11" r="2"/><path d="M6 16.5c.6-1.6 1.7-2.3 3-2.3s2.4.7 3 2.3M14.5 10h4M14.5 13.5h4"/>',
+  support: '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>',
+  pets: '<circle cx="6.5" cy="10" r="1.7"/><circle cx="10" cy="6.3" r="1.7"/><circle cx="14" cy="6.3" r="1.7"/><circle cx="17.5" cy="10" r="1.7"/><path d="M8 17.2c0-2.6 1.9-4.7 4-4.7s4 2.1 4 4.7c0 1.8-1.8 2.3-4 2.3s-4-.5-4-2.3z"/>',
+  wishes: '<path d="M5 19c0-8 6-14 14-14 0 8-6 14-14 14z"/><path d="M5 19l8.5-8.5"/>',
+  contracts: '<path d="M8 3h7l4 4v12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M15 3v4h4M9.5 11h6M9.5 14.5h6M9.5 18h3"/>',
+  donate: '<circle cx="12" cy="7.5" r="3.5"/><path d="M3.5 20c1.8-2.8 4.6-4 8.5-4s6.7 1.2 8.5 4"/><path d="M12 6v3"/>',
+  account: '<circle cx="12" cy="8" r="3.8"/><path d="M4.8 20c1.2-3.6 3.9-5.2 7.2-5.2s6 1.6 7.2 5.2"/>',
+  menu: '<rect x="4" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.6"/>',
+  arrow: '<path d="M5 12h13M13 6l6 6-6 6"/>',
+};
+const icon = (n) => `<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n] || ''}</svg>`;
+document.querySelectorAll('[data-ic]').forEach((el) => (el.outerHTML = icon(el.dataset.ic)));
+// 画像スロット。img/ に画像が無いときは色ブロックだけを表示する
+const art = (name, cls = '', style = '') =>
+  `<span class="art ${cls}" style="${style}"><img src="img/${name}.png" alt="" onerror="this.style.display='none';this.parentNode.classList.add('noimg')"></span>`;
+const PAGE = { cert: ['01', 'cert', 'var(--coral-soft)'], support: ['02', 'support', 'var(--teal-soft)'], pets: ['03', 'pets', 'var(--plum-soft)'],
+  wishes: ['04', 'wishes', 'var(--gold-soft)'], contracts: ['05', 'contracts', 'var(--teal-soft)'], donate: ['06', 'donate', 'var(--rose-soft)'],
+  account: ['07', 'account', 'var(--paper2)'], menu: ['', 'menu', 'var(--coral-soft)'] };
+let currentKey = 'home';
+const head = (eyebrow, title, lead = '') => {
+  const [no, img, blk] = PAGE[currentKey] || ['', '', ''];
+  return `<div class="topbrand"><b>115<i>en.</i></b><span class="small muted">GO TO HAPPY LIFE</span></div>
+   <div class="pagehead"><div><div class="no">${no ? no + ' / ' : ''}${eyebrow}</div><h1>${title}</h1>${lead ? `<p class="muted">${lead}</p>` : ''}</div>
+   ${img ? art(img, '', `--blk:${blk};--h:150px`) : ''}</div>`;
+};
 
 // ---------------- 未ログイン ----------------
 function renderAuth(mode = 'register') {
@@ -86,17 +110,22 @@ function renderAuth(mode = 'register') {
   view.innerHTML = `
   <div class="topbrand"><b>115<i>en.</i></b><span class="small muted">GO TO HAPPY LIFE</span></div>
   <section class="hero">
-    <div class="stack">
+    <div class="stack" style="gap:22px">
       <span class="eyebrow">Life without barriers</span>
-      <h1>家族の有無に<br>かかわらず、<br>必要なときに必要な支援を。</h1>
-      <p class="muted">本人登録と事実の証明書は無料。実際の支援が必要なときだけ、内容と料金に同意してから申し込む仕組み。</p>
-      <div class="grid3 keep">
-        <div class="stat"><b>0<span class="small">円</span></b><small>基本登録・証明書</small></div>
-        <div class="stat"><b>240</b><small>生活課題の支援項目</small></div>
-        <div class="stat"><b>21</b><small>分野（ペットを含む）</small></div>
+      <h1>家族の有無に<br>かかわらず、<br><em>必要なときに</em><br><em>必要な支援を。</em></h1>
+      <p class="muted" style="margin:0;max-width:520px">本人登録と事実の証明書は無料。実際の支援が必要なときだけ、内容と料金に同意してから申し込む仕組み。</p>
+      <div class="collage">
+        ${art('hero-main', 'a1 frame', '--blk:var(--coral-soft)')}
+        ${art('hero-sub', 'a2')}
+        <div class="stamp"><b>FREE</b><small>基本登録<br>証明書</small></div>
+      </div>
+      <div class="facts">
+        <div><b>240</b><small>生活課題の支援項目</small></div>
+        <div><b>21</b><small>分野（ペットを含む）</small></div>
+        <div><b class="it">24h</b><small>いつでも申込</small></div>
       </div>
     </div>
-    <div class="block"><div class="card">
+    <div class="formwrap"><div class="card">
       <div class="segs"><button type="button" data-m="register" class="${mode === 'register' ? 'on' : ''}">無料登録</button><button type="button" data-m="login" class="${mode === 'login' ? 'on' : ''}">ログイン</button></div>
       ${mode === 'register' ? `
       <form id="f" class="stack">
@@ -137,32 +166,42 @@ async function renderHome() {
   me = r.member;
   const c = r.counts;
   const verified = me.identity_status === 'verified';
+  const cert = store.get('gthl-cert');
   view.innerHTML = `
-  ${head('Your life, your way', '')}
-  <section class="welcome">
-    <div class="msg stack">
-      <span class="small muted">${esc(me.id)}</span>
-      <h1>${esc(me.name)} さん</h1>
-      <p class="muted" style="margin:0">必要なときに、必要な支援を。</p>
-      <div class="row"><a class="btn" href="#/cert">証明書を表示</a><a class="btn ghost" href="#/support">支援を探す</a></div>
-    </div>
-    <div class="card stack">
-      <div class="row" style="justify-content:space-between"><span class="eyebrow">Membership</span><span class="pill">基本会員 FREE</span></div>
-      <div class="grid3 keep">
-        <div class="stat"><b>${verified ? '済' : '未'}</b><small>本人確認</small></div>
-        <div class="stat"><b>${c.open_requests}</b><small>対応中の申込</small></div>
-        <div class="stat"><b>${c.contracts}</b><small>登録した契約</small></div>
+  <div class="topbrand"><b>115<i>en.</i></b><span class="small muted">GO TO HAPPY LIFE</span></div>
+  <section class="bento">
+    <div class="tile t-hello">
+      <div class="stack" style="gap:12px">
+        <span class="eyebrow">Your life, your way</span>
+        <h1>${esc(me.name)}<span style="font-size:.6em"> さん</span></h1>
+        <p class="muted" style="margin:0">必要なときに、必要な支援を。</p>
+        <div class="row"><a class="btn coral" href="#/support">支援を探す</a><a class="btn ghost" href="#/cert">証明書</a></div>
       </div>
-      ${verified ? '' : '<div class="note">本人確認は未完了。マイナンバーカードによるオンライン確認は導入準備中のため、当面は面談・書類で確認します。</div>'}
+      ${art('home', 'frame')}
     </div>
+    <a class="tile t-card" href="#/cert">
+      <span class="seal"></span>
+      <span class="k">Member certificate</span>
+      <div class="nm">${esc(me.name)}</div>
+      <div class="small muted latin">${esc(me.id)}</div>
+      <div class="mini">
+        <span>本人確認　${verified ? '<span class="pill ok">確認済</span>' : '<span class="pill warn">未確認</span>'}</span>
+        <span>証明書　${cert ? '<span class="pill ok">発行済</span>' : '<span class="pill">未発行</span>'}</span>
+      </div>
+    </a>
+    <div class="tile t-stats">
+      <div><b>${verified ? '済' : '未'}</b><small>本人確認</small></div>
+      <div><b>${c.open_requests}</b><small>対応中の申込</small></div>
+      <div><b>${c.contracts}</b><small>登録した契約</small></div>
+    </div>
+    <a class="tile t-c teal" href="#/support"><span class="k">02 Support</span><h3>生活支援</h3><span class="small muted">21分野・240項目から探す</span><span class="go">${icon('arrow')}</span>${art('support')}</a>
+    <a class="tile t-c plum" href="#/pets"><span class="k">03 Pets</span><h3>マイペット</h3><span class="small muted">${c.pets}件登録</span><span class="go">${icon('arrow')}</span>${art('pets')}</a>
+    <a class="tile t-c gold" href="#/wishes"><span class="k">04 Wishes</span><h3>生前・死後の希望</h3><span class="small muted">無料で記録</span><span class="go">${icon('arrow')}</span>${art('wishes')}</a>
+    <a class="tile t-c paper" href="#/contracts"><span class="k">05 Contracts</span><h3>契約の管理</h3><span class="small muted">他社の契約もまとめて</span><span class="go">${icon('arrow')}</span>${art('contracts')}</a>
+    <a class="tile t-c rose" href="#/donate"><span class="k">06 Support us</span><h3>活動を支援</h3><span class="small muted">任意の寄付</span><span class="go">${icon('arrow')}</span>${art('donate')}</a>
+    <a class="tile t-c coral" href="#/cert"><span class="k">01 Certificate</span><h3>デジタル証明書</h3><span class="small muted">QRで提示</span><span class="go">${icon('arrow')}</span>${art('cert')}</a>
   </section>
-  <h3 style="margin:30px 0 12px">Quick access</h3>
-  <div class="quick">
-    <a href="#/support" style="--c:var(--coral)"><b>生活支援</b><small>240項目から探して申込</small></a>
-    <a href="#/pets" style="--c:var(--plum)"><b>マイペット</b><small>${c.pets}件登録</small></a>
-    <a href="#/wishes" style="--c:var(--teal)"><b>生前・死後の希望</b><small>無料で登録</small></a>
-    <a href="#/donate" style="--c:var(--gold)"><b>活動を支援</b><small>任意の寄付</small></a>
-  </div>`;
+  ${verified ? '' : '<div class="note" style="margin-top:18px">本人確認は未完了。マイナンバーカードによるオンライン確認は導入準備中のため、当面は面談・書類で確認します。</div>'}`;
 }
 
 // ---------------- 証明書 ----------------
@@ -238,6 +277,7 @@ async function renderCert() {
 const REQ_LABEL = { received: '受付', quoted: '見積提示', approved: '見積に同意', started: '対応中', done: '完了', cancelled: '取消' };
 const REQ_STEP = { received: 1, quoted: 2, approved: 3, started: 4, done: 5, cancelled: 0 };
 let supportState = { field: '', q: '' };
+const CHIP_COLORS = ['var(--coral)', 'var(--teal)', 'var(--gold)', 'var(--plum)', 'var(--rose)'];
 
 async function renderSupport() {
   const [cat, r] = await Promise.all([loadCatalog(), api('/api/requests')]);
@@ -252,7 +292,7 @@ async function renderSupport() {
     <input type="text" id="q" placeholder="キーワードで探す（例：入院、通訳、散歩）" value="${esc(supportState.q)}">
     <div class="chips" id="chips">
       <button class="chip ${supportState.field ? '' : 'on'}" data-f="">すべて<em>${cat.length}</em></button>
-      ${fields.map((f) => `<button class="chip ${supportState.field === f ? 'on' : ''}" data-f="${esc(f)}">${esc(f)}<em>${counts[f]}</em></button>`).join('')}
+      ${fields.map((f, i) => `<button class="chip ${supportState.field === f ? 'on' : ''}" style="--c:${CHIP_COLORS[i % CHIP_COLORS.length]}" data-f="${esc(f)}">${esc(f)}<em>${counts[f]}</em></button>`).join('')}
     </div>
     <div class="small muted" id="cnt"></div>
     <div class="items" id="items"></div>
@@ -498,11 +538,11 @@ async function renderAccount() {
 
 function renderMenu() {
   view.innerHTML = `${head('Menu', 'その他')}
-  <div class="quick" style="grid-template-columns:1fr 1fr">
-    <a href="#/pets" style="--c:var(--plum)"><b>マイペット</b><small>登録・引取先</small></a>
-    <a href="#/contracts" style="--c:var(--teal)"><b>契約の管理</b><small>重複の確認</small></a>
-    <a href="#/donate" style="--c:var(--gold)"><b>活動を支援</b><small>任意の寄付</small></a>
-    <a href="#/account" style="--c:var(--coral)"><b>アカウント</b><small>登録情報・退会</small></a>
+  <div class="bento">
+    <a class="tile t-c plum" href="#/pets"><span class="k">03</span><h3>マイペット</h3><span class="go">${icon('arrow')}</span>${art('pets')}</a>
+    <a class="tile t-c paper" href="#/contracts"><span class="k">05</span><h3>契約の管理</h3><span class="go">${icon('arrow')}</span>${art('contracts')}</a>
+    <a class="tile t-c rose" href="#/donate"><span class="k">06</span><h3>活動を支援</h3><span class="go">${icon('arrow')}</span>${art('donate')}</a>
+    <a class="tile t-c gold" href="#/account"><span class="k">07</span><h3>アカウント</h3><span class="go">${icon('arrow')}</span>${art('account')}</a>
   </div>`;
 }
 
@@ -511,6 +551,7 @@ const ROUTES = { home: renderHome, cert: renderCert, support: renderSupport, pet
 
 async function render() {
   const key = (location.hash.replace(/^#\/?/, '').split(/[?/]/)[0]) || 'home';
+  currentKey = key;
   const nav = [$('#rail'), $('#tabbar')];
   if (!token) {
     nav.forEach((n) => n.classList.add('hidden'));
