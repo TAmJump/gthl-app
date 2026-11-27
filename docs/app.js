@@ -100,7 +100,7 @@ const FIELDS = ['医療・入退院', '介護・施設', '住宅・居住', '日
 // 13行政・手続き 14契約・委任 15財産管理 16遺言・相続 17相談 18連絡・メッセージ 19海外・在留 20転居・住まい 21見守り・支援 22個人情報保護 23学び・就労支援 24ペット支援
 const FIELD_ICON = ['04', '03', '05', '06', '07', '13', '15', '17', '16', '14', '12', '23', '19', '18', '19', '20', '09', '22', '02', '18', '24'];
 const hueOf = (i) => i;
-const pict = (file, c, cls = '') => `<img class="pict pi ${cls}" src="img/icons/${file}.png" alt="" loading="lazy">`;
+const pict = (file, c, cls = '') => `<img class="pict pi ${cls}" src="img/icons/${file}.png" alt="">`;
 const fieldPict = (f, cls = '') => { const i = FIELDS.indexOf(f); return i < 0 ? '' : pict(FIELD_ICON[i], i, cls); };
 const PAGE_PICT = { cert: ['08', 0], support: ['21', 0], pets: ['24', 0], wishes: ['16', 0], contracts: ['14', 0], donate: ['17', 0], account: ['12', 0], menu: ['06', 0] };
 const PAGE = { cert: ['01', 'cert', 'var(--coral-soft)'], support: ['02', 'support', 'var(--teal-soft)'], pets: ['03', 'pets', 'var(--plum-soft)'],
@@ -118,8 +118,15 @@ const head = (eyebrow, title, lead = '') => {
 function renderAuth(mode = 'register') {
   document.body.classList.add('guest');
   view.innerHTML = `
-  <div class="topbrand"><b>115<i>en.</i></b><span class="small muted">GO TO HAPPY LIFE</span></div>
-  <section class="hero">
+  <header class="lphead">
+    <b class="lplogo">115<i>en.</i></b>
+    <nav class="lpnav">
+      <button data-go="lp-phil">理念</button><button data-go="lp-found">医療・救急・介護</button><button data-go="lp-net">専門職</button>
+      <button data-go="lp-cert">証明書</button><button data-go="lp-fair">料金</button>
+    </nav>
+    <div class="row" style="gap:8px"><button class="btn sm ghost" data-login>ログイン</button><button class="btn sm cta" data-go="join">無料ではじめる</button></div>
+  </header>
+  <section class="hero" id="join">
     <div class="stack" style="gap:0">
       <div class="eyebrow">QUESTION THE STANDARD.</div>
       <h1 style="margin-top:18px">身元保証とは、<br>一体、何を保証するのでしょうか。</h1>
@@ -128,13 +135,13 @@ function renderAuth(mode = 'register') {
       <p>年齢、国籍、障害、家族構成、これまでの人生。<br>私たちは、属性だけで人を判断しません。</p>
       <p>医療・救急・介護を原点に、社会生活に必要な支援のあり方を再定義します。</p>
       <div class="rule"><h3>人を保証するのではなく、<br>必要な対応を保証する。</h3></div>
-      <div class="metrics">
-        <div><b>¥0</b><small>基本登録・証明書</small></div>
-        <div><b>240</b><small>生活支援項目</small></div>
-        <div><b>24h</b><small>オンライン申込</small></div>
+      <div class="rule"><h3>今は、登録するだけ。<br>必要になったら、すぐに。</h3></div>
+      <div class="metrics speed">
+        <div><small class="k">REGISTER</small><b>¥0</b><small>基本登録・本人確認・基本証明書</small></div>
+        <div><small class="k">CERTIFICATE</small><b>5<span>min</span></b><small>保証証明書の最短発行目標</small></div>
+        <div><small class="k">RESPONSE</small><b>30<span>min</span></b><small>支援業務の着手目標</small></div>
       </div>
-      <div class="statement">PEOPLE,<br>NOT LABELS.</div>
-      <p class="muted" style="margin:0">属性ではなく、必要性に向き合う。</p>
+      <p class="micro">240項目の生活支援 / 24時間オンライン申込<br>基本証明書は本人確認完了後に無料で発行。保証証明書は審査・契約成立後。時間は設計目標であり、到着・完了を約束するものではありません。</p>
     </div>
     <div class="formwrap"><div class="card">
       <div class="segs"><button type="button" data-m="register" class="${mode === 'register' ? 'on' : ''}">無料登録</button><button type="button" data-m="login" class="${mode === 'login' ? 'on' : ''}">ログイン</button></div>
@@ -158,7 +165,148 @@ function renderAuth(mode = 'register') {
         <button class="btn" type="submit">ログイン</button>
       </form>`}
     </div></div>
+  </section>
+
+  <section class="lp band" id="lp-phil">
+    <div class="eyebrow">OUR PHILOSOPHY.</div>
+    <div class="lp2">
+      <div>
+        <h1>困っているのは、人。<br>変えるべきなのは、仕組み。</h1>
+        <p class="lines">家族がいない。<br>日本語が話せない。<br>身体に障害がある。<br>過去にさまざまな事情がある。</p>
+      </div>
+      <div class="rule" style="margin-top:0">
+        <p>それらは、必要な医療や介護を受けることができない理由になるのでしょうか。</p>
+        <p>人に問題があるのではなく、社会の仕組みが障壁を生み出していることもあります。</p>
+        <p>私たちは、その障壁を減らすために存在します。</p>
+        <div class="statement">PEOPLE,<br>NOT LABELS.</div>
+        <p>属性ではなく、必要性に向き合う。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="lp" id="lp-found">
+    <div class="eyebrow">OUR FOUNDATION.</div>
+    <h1>生命と生活を支える。<br>それが、私たちの原点です。</h1>
+    <div class="three">
+      <div class="tile">${pict('01', 0, 'lg')}<h3>医療</h3><small>MEDICAL</small></div>
+      <div class="tile">${pict('02', 0, 'lg')}<h3>救急</h3><small>EMERGENCY</small></div>
+      <div class="tile">${pict('03', 0, 'lg')}<h3>介護</h3><small>CARE</small></div>
+    </div>
+    <div class="lp2">
+      <div><h2>安否を確認するだけで、<br>本当に十分でしょうか。</h2><p>大切なのは、異変が起きたときに何ができるか。</p></div>
+      <div>
+        <div class="route"><div>医療が必要なら<span>医療へ。</span></div><div>介護が必要なら<span>介護へ。</span></div><div>緊急性があれば<span>適切な救急対応へ。</span></div></div>
+        <p style="margin-top:14px">私たちは、確認するだけで終わらない支援体制を目指します。</p>
+      </div>
+    </div>
+    <aside>緊急時は119番へ。医療行為・救急搬送・介護は、資格・許可を有する機関や専門職がそれぞれの役割に応じて対応します。</aside>
+  </section>
+
+  <section class="lp band" id="lp-net">
+    <div class="eyebrow">PROFESSIONAL NETWORK.</div>
+    <div class="lp2">
+      <div>
+        <h1>一つの窓口。<br>それぞれの専門性。</h1>
+        <p>すべてを一つの組織で行うのではなく、必要な業務を適切な専門職へつなぎます。</p>
+        <div class="hub"><strong>115<i>en.</i></strong><small>生活支援・総合連携窓口</small></div>
+        <div class="connector">↓</div>
+        <div class="network">医療　／　救急　／　看護　／　介護</div>
+      </div>
+      <div>
+        <div class="two">
+          <div class="tile specialist">${pict('09', 0, 'md')}<small>LAW</small><h3>弁護士</h3><p>法律相談・契約・権利擁護</p></div>
+          <div class="tile specialist">${pict('10', 0, 'md')}<small>LEGAL AFFAIRS</small><h3>司法書士</h3><p>相続・登記・成年後見</p></div>
+          <div class="tile specialist">${pict('11', 0, 'md')}<small>TAX &amp; ACCOUNTING</small><h3>税理士</h3><p>税務・財産・相続税</p></div>
+          <div class="tile specialist">${pict('12', 0, 'md')}<small>LABOR &amp; SOCIAL SECURITY</small><h3>社会保険労務士</h3><p>労務・年金・社会保険</p></div>
+        </div>
+        <h3>生前から死後まで。<br>必要なときに、必要な専門家へ。</h3>
+      </div>
+    </div>
+    <aside>連携先による個別対応。専門業務の受任・費用・提供条件は個別に確認します。</aside>
+  </section>
+
+  <section class="lp" id="lp-fields">
+    <div class="eyebrow">240 SUPPORTS.</div>
+    <h1>人生のあらゆる場面に。</h1>
+    <p>入院・介護から、住まい、手続き、言葉、ペットまで。21分野・240項目の生活支援から、必要なものを選んで申し込めます。</p>
+    <div class="fgrid">${FIELDS.map((f) => `<button type="button" data-go="join">${fieldPict(f, 'md')}<span>${esc(f)}</span></button>`).join('')}</div>
+  </section>
+
+  <section class="lp band" id="lp-cert">
+    <div class="eyebrow">VERIFIED, NOT LABELLED.</div>
+    <div class="lp2">
+      <div>
+        <h1>証明するのは、<br>人の価値ではなく、事実。</h1>
+        <p>本人確認と、実際に引き受けた契約上の責任を明確に分けます。</p>
+        <div class="two">
+          <div class="tile"><h3>基本証明書 / ¥0</h3><p>本人確認と登録の事実。契約上の保証責任は付与しない。</p></div>
+          <div class="tile"><h3>保証証明書 / 最短5分目標</h3><p>契約成立後、保証先・期間・上限・業務範囲を明示。必要な保証金は入金確認後に発行。</p></div>
+        </div>
+      </div>
+      <div class="certificate">
+        <div class="certhead"><strong class="lplogo">115<i>en.</i></strong><small>SAMPLE / 民間発行</small></div>
+        <small class="k">VERIFIED MEMBERSHIP CERTIFICATE</small>
+        <h3>本人確認・登録証明書</h3>
+        <div class="certstatus">✓ 本人確認済み（見本）</div>
+        <dl><dt>氏名</dt><dd>山田 太郎（架空）</dd><dt>会員番号</dt><dd>SAMPLE-000001</dd><dt>本人確認方法</dt><dd>JPKI（想定）</dd><dt>会員登録</dt><dd>有効（見本）</dd><dt>債務保証・緊急対応</dt><dd>未契約</dd><dt>発行者</dt><dd>NPO法人 GO TO HAPPY LIFE</dd></dl>
+        <div class="certhead"><div class="qrplaceholder">QR<br>見本</div><small>QRを読み取ると、発行元・有効期限・失効状況を照会できます</small></div>
+      </div>
+    </div>
+    <aside>基本証明書は公的証明書ではなく、医療同意権や支払保証を付与しません。第三者への情報開示は本人同意等の適法な根拠と必要最小限の範囲に限定します。</aside>
+  </section>
+
+  <section class="lp" id="lp-fair">
+    <div class="eyebrow">FAIRNESS BY DESIGN.</div>
+    <div class="lp2">
+      <div>
+        <h1>困っていることに、<br>値段をつけない。</h1>
+        <h2 class="accent">提供する仕事に、正当な対価を。</h2>
+        <p>高齢者だから。障害があるから。外国人だから。身寄りがないから。<br>それだけで、特別な費用を負担する必要があるのでしょうか。</p>
+        <p>私たちは、基本登録と基本証明書を無料で提供し、実際の業務や契約上の責任に対して適正な料金を設定します。</p>
+      </div>
+      <div>
+        <div class="two">
+          <div class="tile big"><small>社会へのアクセス</small><b>FREE.</b><p>基本登録・本人確認・基本証明書</p></div>
+          <div class="tile big"><small>実際の支援業務</small><b>FAIR.</b><p>内容と料金を確認して申し込む</p></div>
+        </div>
+        <div class="rule"><h3>この仕組みを、これからも無料で。</h3><p>私たちの考え方に共感していただける方から、任意の寄付を受け付ける構想です。寄付の有無によって基本機能に差を設けません。</p></div>
+      </div>
+    </div>
+    <aside>基本証明書は本人確認・登録の事実を示すもので、債務保証や緊急対応の引受けを意味しません。サービス提供は法令・安全性・契約条件に基づきます。</aside>
+  </section>
+
+  <section class="lp band" id="lp-std">
+    <div class="eyebrow">BUILDING A NEW STANDARD.</div>
+    <h1>国の認定を待つのではなく、<br>社会で使える仕組みへ。</h1>
+    <p>病院・介護施設・企業で共通して使える国認定の身元保証証明書は、これまでの調査では確認できていません。公的個人認証と民間の保証契約は別のものです。</p>
+    <div class="flow">
+      <div class="hub"><strong>JPKI</strong><small>公的個人認証・デジタル庁API（導入予定）</small></div><div class="connector">→</div>
+      <div class="hub"><strong>115<i>en.</i></strong><small>本人確認・契約管理・民間証明書発行</small></div><div class="connector">→</div>
+      <div class="hub"><strong>病院・介護施設・企業</strong><small>QRで照会</small></div>
+    </div>
+    <h3 style="margin-top:28px">社会実装ロードマップ</h3>
+    <ol class="roadmap">
+      <li><span>01</span>公的個人認証APIの接続・検証</li><li><span>02</span>弁護士・司法書士による証明書と契約の監修</li><li><span>03</span>連携病院・介護施設との受入合意</li>
+      <li><span>04</span>QR照会・失効管理・アクセス制御</li><li><span>05</span>自治体との連携・実証事業</li><li><span>06</span>全国の医療・介護・企業への普及</li><li><span>07</span>証明書仕様公開・標準化の提案</li>
+    </ol>
+    <aside>本ページの内容は構想を含み、国の認定・受入合意・API接続を取得済みと示すものではありません。</aside>
+  </section>
+
+  <section class="lp keywords">
+    <div><b>QUESTION.</b><p>当たり前を問い直す。</p></div>
+    <div><b>REDEFINE.</b><p>身元保証を再定義する。</p></div>
+    <div><b>CONNECT.</b><p>医療・介護・専門性をつなぐ。</p></div>
+    <div><b>FAIR.</b><p>すべての人に、公平な選択肢を。</p></div>
+    <div><b>LIFE WITHOUT BARRIERS.</b><p>生きることに、障壁をつくらない。</p></div>
+  </section>
+
+  <section class="lp lpend">
+    <h1>あなたの人生に、<br>新しい選択肢を。</h1>
+    <button class="btn cta" data-go="join" style="max-width:340px;width:100%">無料ではじめる <span>↗</span></button>
+    <p class="small muted" style="margin-top:22px">NPO法人 GO TO HAPPY LIFE（現登記名 特定非営利活動法人 日本在宅看護普及会）／お問い合わせ info@115en.com／<a href="terms.html">利用規約</a>・<a href="privacy.html">プライバシーポリシー</a></p>
   </section>`;
+  view.querySelectorAll('[data-go]').forEach((b) => (b.onclick = () => document.getElementById(b.dataset.go).scrollIntoView({ behavior: 'smooth' })));
+  view.querySelectorAll('[data-login]').forEach((b) => (b.onclick = () => { renderAuth('login'); document.getElementById('join').scrollIntoView(); }));
   view.querySelectorAll('.segs button').forEach((b) => (b.onclick = () => renderAuth(b.dataset.m)));
   bindSubmit($('#f'), async (o) => {
     const path = mode === 'register' ? '/api/auth/register' : '/api/auth/login';
