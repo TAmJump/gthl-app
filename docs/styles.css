@@ -79,7 +79,7 @@ textarea{min-height:96px;resize:vertical}
 
 /* 画像スロット：イラストは切らない（contain）。未配置時は色ブロックだけ見せる */
 .art{position:relative;display:block}
-.art img{display:block;width:100%;height:auto;object-fit:contain;position:relative;z-index:1}
+.art img{display:block;width:100%;height:auto;object-fit:contain;position:relative;z-index:1;border-radius:16px}
 .art.noimg img{display:none}
 .art.noimg{min-height:var(--h,160px)}
 .art::before{content:"";position:absolute;inset:14% -6% -6% 10%;border-radius:28px;background:var(--blk,var(--coral-soft));z-index:0}
@@ -99,8 +99,8 @@ textarea{min-height:96px;resize:vertical}
 .hero h1{font-size:clamp(32px,5vw,54px);line-height:1.34;letter-spacing:.04em}
 .hero h1 em{font-style:normal;background:linear-gradient(transparent 64%,var(--coral-soft) 64%)}
 .collage{position:relative;display:flex;align-items:flex-start;gap:6%;padding:10px 10px 16px 0;margin-top:6px}
-.collage .a1{width:50%;--h:240px}
-.collage .a2{width:32%;margin-top:48px;--blk:var(--teal-soft);--h:150px}
+.collage .a1{width:46%;--h:260px}
+.collage .a2{width:40%;margin-top:84px;--blk:var(--teal-soft);--h:150px}
 .collage .stamp{position:absolute;right:0;bottom:-6px;width:128px;height:128px;border-radius:50%;border:1px solid var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:var(--gold-soft);transform:rotate(-8deg);z-index:3}
 .collage .stamp b{font:600 32px/1 var(--latin)} .collage .stamp small{font-size:10.5px;letter-spacing:.08em;line-height:1.4}
 .facts{display:flex;gap:26px;flex-wrap:wrap}
@@ -128,9 +128,10 @@ a.tile:hover{transform:translateY(-3px)}
 .t-card .nm{font:600 22px/1.3 var(--serif);letter-spacing:.06em;margin-top:6px}
 .t-card .mini{margin-top:auto;border-top:1px dashed rgba(34,38,43,.25);padding-top:12px;font-size:12.5px;display:grid;gap:4px}
 .t-card .seal{position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;border:1px solid var(--coral);opacity:.55}
-.t-c{grid-column:span 2;min-height:176px;padding-right:110px}
-.t-c .art{position:absolute;right:4px;bottom:4px;width:104px;--h:0px}
-.t-c .art::before{display:none}
+.t-c{grid-column:span 2;min-height:176px;padding-right:118px}
+.t-c .badge{position:absolute;right:18px;bottom:18px;width:84px;height:84px;border-radius:50%;background:rgba(255,252,246,.7);border:1px solid rgba(34,38,43,.18);display:flex;align-items:center;justify-content:center}
+.t-c .badge svg.i{width:40px;height:40px;stroke-width:1.2}
+.t-c.coral .badge svg{stroke:var(--coral)}.t-c.teal .badge svg{stroke:var(--teal)}.t-c.plum .badge svg{stroke:var(--plum)}.t-c.gold .badge svg{stroke:var(--gold)}.t-c.rose .badge svg{stroke:var(--rose)}
 .t-c.coral{background:var(--coral-soft);border-color:#efcbbd}
 .t-c.teal{background:var(--teal-soft);border-color:#bddbd4}
 .t-c.plum{background:var(--plum-soft);border-color:#dbc5d5}
@@ -147,7 +148,7 @@ a.tile:hover{transform:translateY(-3px)}
   .t-hello .art{--h:120px}
   .t-card{grid-column:span 2}
   .t-c{grid-column:span 1;min-height:150px;padding:18px 18px 64px}
-  .t-c .art{width:66px}
+  .t-c .badge{width:54px;height:54px;right:14px;bottom:14px}.t-c .badge svg.i{width:28px;height:28px}
   .t-stats{grid-column:span 2}
   .t-stats div{padding:16px}
   .t-stats b{font-size:26px}
