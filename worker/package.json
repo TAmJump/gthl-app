@@ -2,10 +2,16 @@
   "name": "gthl-api",
   "private": true,
   "scripts": {
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
+    "key": "node -e \"console.log(require('crypto').randomBytes(32).toString('base64'))\"",
+    "db:create": "wrangler d1 create gthl-db",
     "db:local": "wrangler d1 execute gthl-db --local --file=schema.sql",
-    "db:remote": "wrangler d1 execute gthl-db --remote --file=schema.sql"
+    "db:remote": "wrangler d1 execute gthl-db --remote --file=schema.sql",
+    "secret:key": "wrangler secret put DATA_KEY",
+    "admin": "wrangler d1 execute gthl-db --remote --command \"UPDATE members SET role='admin' WHERE email='tiger@115en.com'\"",
+    "dev": "wrangler dev --port 8787",
+    "deploy": "wrangler deploy"
   },
-  "devDependencies": { "wrangler": "^4" }
+  "devDependencies": {
+    "wrangler": "^4"
+  }
 }
