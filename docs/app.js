@@ -95,12 +95,42 @@ const art = (name, cls = '', style = '') =>
   `<span class="art ${cls}" style="${style}"><img src="img/${name}.png" alt="" onerror="this.style.display='none';this.parentNode.classList.add('noimg')"></span>`;
 // 21分野のピクトグラム（img/pict/01〜21.png を型にして、色はCSSのグラデーションで塗る）
 const FIELDS = ['医療・入退院', '介護・施設', '住宅・居住', '日常生活', '緊急対応・見守り', '行政・社会保障', '金銭・財産・法律', '社会参加・孤立防止', '終末期・死後事務', '就労・一般契約', '子育て・家庭', '教育・学生生活', '外国人・在留', '言語・通訳', '海外・国際生活', '社会復帰', '障害・権利擁護', 'DV・虐待・安全', '災害', 'デジタル生活', 'ペット'];
-// 原色4色（赤・青・黄・緑）を順番に割り当てる
-const PRIMARY = ['#e60012', '#0068b7', '#f5b400', '#009944'];
+// 線画アイコン（ブランド構想と同じ 48px・線幅2.4・角丸）。21分野＋汎用
+const FI = [
+  '<path d="M10 4h28v40H10zM24 10v14M17 17h14M19 44V32h10v12"/>',
+  '<path d="M6 22 24 7l18 15M10 19v24h28V19"/><path d="M24 37c-6-4-8-8-5-11 2-2 4-1 5 1 1-2 3-3 5-1 3 3 1 7-5 11z"/>',
+  '<path d="M6 22 24 7l18 15M10 19v24h28V19M20 43V31h8v12"/>',
+  '<path d="M10 16h28l-3 27H13zM18 16v-4a6 6 0 0 1 12 0v4"/>',
+  '<path d="M4 15h26l12 13v12H4zM30 15v13h12M12 22h12M18 16v12"/><circle cx="13" cy="40" r="5"/><circle cx="34" cy="40" r="5"/>',
+  '<path d="M6 18 24 7l18 11zM11 18v20M19 18v20M29 18v20M37 18v20M6 42h36"/>',
+  '<path d="M24 5v35M9 40h30M6 13h36M11 13 4 28h14zM37 13 30 28h14z"/>',
+  '<circle cx="16" cy="15" r="6"/><circle cx="32" cy="15" r="6"/><path d="M4 41c1-8 6-12 12-12s11 4 12 12M20 41c1-8 6-12 12-12s11 4 12 12"/>',
+  '<path d="M24 40c-8 0-14-5-16-12 7 0 12 3 16 8 4-5 9-8 16-8-2 7-8 12-16 12zM24 35c-4-6-4-13 0-21 4 8 4 15 0 21z"/>',
+  '<rect x="5" y="15" width="38" height="27" rx="3"/><path d="M17 15V8h14v7M5 25h38M21 23h6v5h-6z"/>',
+  '<circle cx="16" cy="9" r="4"/><path d="M16 13v15M9 19h14M16 28l-5 14M16 28l5 14"/><circle cx="34" cy="22" r="3"/><path d="M34 25v9M29 29h10M34 34l-3 8M34 34l3 8"/>',
+  '<path d="M4 18 24 9l20 9-20 9zM12 22v10c0 3 5 6 12 6s12-3 12-6V22M44 18v10"/>',
+  '<rect x="11" y="4" width="26" height="40" rx="3"/><circle cx="24" cy="21" r="7"/><path d="M17 21h14M24 14c3 4 3 10 0 14M24 14c-3 4-3 10 0 14M18 36h12"/>',
+  '<path d="M6 8h22v14H14l-6 5v-5H6zM20 26v6h14l6 5v-5h2V18h-8"/>',
+  '<path d="M43 6 5 21l14 6 4 15 6-10 10 6zM19 27 43 6"/>',
+  '<path d="M22 6h18v36H22M4 24h22M18 16l8 8-8 8"/>',
+  '<circle cx="24" cy="10" r="5"/><path d="M16 26c1-5 4-8 8-8s7 3 8 8M4 32h9l7 3h9a3 3 0 0 1 0 6H18M29 41l11-6a3 3 0 0 1 3 5l-12 7H4"/>',
+  '<path d="M24 4 8 10v12c0 11 7 18 16 22 9-4 16-11 16-22V10z"/><rect x="18" y="22" width="12" height="10" rx="2"/><path d="M20 22v-3a4 4 0 0 1 8 0v3"/>',
+  '<path d="M5 24a19 19 0 0 1 38 0zM24 24v14a4 4 0 0 1-8 0M24 5v2"/>',
+  '<rect x="14" y="4" width="20" height="40" rx="3"/><path d="M21 38h6M20 10h8"/>',
+  '<circle cx="13" cy="21" r="3.5"/><circle cx="19" cy="12" r="3.5"/><circle cx="29" cy="12" r="3.5"/><circle cx="35" cy="21" r="3.5"/><path d="M16 37c0-6 4-11 8-11s8 5 8 11c0 4-4 5-8 5s-8-1-8-5z"/>',
+];
+const FI_EXTRA = {
+  heart: '<path d="M24 19C10 3 0 23 24 39 48 23 38 3 24 19z"/>',
+  card: '<rect x="4" y="10" width="40" height="28" rx="3"/><circle cx="16" cy="22" r="4"/><path d="M9 33c1-3 4-5 7-5s6 2 7 5M28 19h11M28 25h11M28 31h7"/>',
+};
 const hueOf = (i) => i;
-const pict = (file, c, cls = '') => `<i class="pict ${cls}" style="--m:url(img/pict/${file}.png);--pc:${PRIMARY[c % 4]}"></i>`;
+// 互換用：pict('01'〜'21' or 'heart'/'card', 色番号(未使用), サイズ)
+const pict = (file, c, cls = '') => {
+  const body = FI_EXTRA[file] || FI[Number(file) - 1] || '';
+  return `<svg class="pict fi ${cls}" viewBox="0 0 48 48" aria-hidden="true">${body}</svg>`;
+};
 const fieldPict = (f, cls = '') => { const i = FIELDS.indexOf(f); return i < 0 ? '' : pict(String(i + 1).padStart(2, '0'), hueOf(i), cls); };
-const PAGE_PICT = { cert: ['13', 1], support: ['17', 3], pets: ['21', 0], wishes: ['09', 2], contracts: ['07', 1], donate: ['heart', 0], account: ['08', 3], menu: ['04', 2] };
+const PAGE_PICT = { cert: ['card', 1], support: ['17', 3], pets: ['21', 0], wishes: ['09', 2], contracts: ['07', 1], donate: ['heart', 0], account: ['08', 3], menu: ['04', 2] };
 const PAGE = { cert: ['01', 'cert', 'var(--coral-soft)'], support: ['02', 'support', 'var(--teal-soft)'], pets: ['03', 'pets', 'var(--plum-soft)'],
   wishes: ['04', 'wishes', 'var(--gold-soft)'], contracts: ['05', 'contracts', 'var(--teal-soft)'], donate: ['06', 'donate', 'var(--rose-soft)'],
   account: ['07', '', ''], menu: ['', '', ''] };
@@ -118,19 +148,21 @@ function renderAuth(mode = 'register') {
   view.innerHTML = `
   <div class="topbrand"><b>115<i>en.</i></b><span class="small muted">GO TO HAPPY LIFE</span></div>
   <section class="hero">
-    <div class="stack" style="gap:22px">
-      <span class="eyebrow">Life without barriers</span>
-      <h1>家族の有無に<br>かかわらず、<br><em>必要なときに</em><br><em>必要な支援を。</em></h1>
-      <p class="muted" style="margin:0;max-width:520px">本人登録と事実の証明書は無料。実際の支援が必要なときだけ、内容と料金に同意してから申し込む仕組み。</p>
-      <div class="mosaic" aria-hidden="true">
-        ${FIELDS.map((f, i) => `<span style="--d:${i}">${fieldPict(f, 'mo')}</span>`).join('')}
-        <div class="stamp"><b>FREE</b><small>基本登録<br>証明書</small></div>
+    <div class="stack" style="gap:0">
+      <div class="eyebrow">QUESTION THE STANDARD.</div>
+      <h1 style="margin-top:18px">身元保証とは、<br>一体、何を保証するのでしょうか。</h1>
+      <h2 class="accent" style="margin:22px 0 20px">あなたの存在に、<br>保証人は必要ですか。</h2>
+      <p>社会が求める保証のために、なぜ個人がお金を払わなければならないのでしょうか。</p>
+      <p>年齢、国籍、障害、家族構成、これまでの人生。<br>私たちは、属性だけで人を判断しません。</p>
+      <p>医療・救急・介護を原点に、社会生活に必要な支援のあり方を再定義します。</p>
+      <div class="rule"><h3>人を保証するのではなく、<br>必要な対応を保証する。</h3></div>
+      <div class="metrics">
+        <div><b>¥0</b><small>基本登録・証明書</small></div>
+        <div><b>240</b><small>生活支援項目</small></div>
+        <div><b>24h</b><small>オンライン申込</small></div>
       </div>
-      <div class="facts">
-        <div><b>240</b><small>生活課題の支援項目</small></div>
-        <div><b>21</b><small>分野（ペットを含む）</small></div>
-        <div><b class="it">24h</b><small>いつでも申込</small></div>
-      </div>
+      <div class="statement">PEOPLE,<br>NOT LABELS.</div>
+      <p class="muted" style="margin:0">属性ではなく、必要性に向き合う。</p>
     </div>
     <div class="formwrap"><div class="card">
       <div class="segs"><button type="button" data-m="register" class="${mode === 'register' ? 'on' : ''}">無料登録</button><button type="button" data-m="login" class="${mode === 'login' ? 'on' : ''}">ログイン</button></div>
@@ -146,7 +178,7 @@ function renderAuth(mode = 'register') {
         <label class="f">パスワード（10文字以上）<input type="password" name="password" required minlength="10" autocomplete="new-password"></label>
         <label class="check"><input type="checkbox" name="agree" required><span><a href="terms.html" target="_blank">利用規約</a>・<a href="privacy.html" target="_blank">プライバシーポリシー</a>に同意する</span></label>
         <p class="small muted" style="margin:0">マイナンバー（12桁の個人番号）やカード番号は登録しません。</p>
-        <button class="btn coral" type="submit">無料で登録する</button>
+        <button class="btn cta" type="submit">無料ではじめる <span>↗</span></button>
       </form>` : `
       <form id="f" class="stack">
         <label class="f">メールアドレス<input type="email" name="email" required autocomplete="email"></label>
@@ -206,7 +238,7 @@ async function renderHome() {
     <a class="tile t-c gold" href="#/wishes"><span class="k">04 Wishes</span><h3>生前・死後の希望</h3><span class="small muted">無料で記録</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('09', 2, 'lg')}</span></a>
     <a class="tile t-c paper" href="#/contracts"><span class="k">05 Contracts</span><h3>契約の管理</h3><span class="small muted">他社の契約もまとめて</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('07', 1, 'lg')}</span></a>
     <a class="tile t-c rose" href="#/donate"><span class="k">06 Support us</span><h3>活動を支援</h3><span class="small muted">任意の寄付</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('heart', 0, 'lg')}</span></a>
-    <a class="tile t-c coral" href="#/cert"><span class="k">01 Certificate</span><h3>デジタル証明書</h3><span class="small muted">QRで提示</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('13', 1, 'lg')}</span></a>
+    <a class="tile t-c coral" href="#/cert"><span class="k">01 Certificate</span><h3>デジタル証明書</h3><span class="small muted">QRで提示</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('card', 1, 'lg')}</span></a>
   </section>
   <section class="fieldstrip">
     <div class="row" style="justify-content:space-between;align-items:baseline"><h3>21分野から探す</h3><a class="small" href="#/support">すべて見る</a></div>
