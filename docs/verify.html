@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>証明書の照会 | 115en. GO TO HAPPY LIFE</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Noto+Serif+JP:wght@500;600&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main style="margin:auto;max-width:620px;padding:32px 18px 60px">
+  <div class="row" style="justify-content:space-between;margin-bottom:22px"><b style="font:600 24px/1 var(--latin)">115<i style="font-style:normal;color:var(--coral)">en.</i></b><span class="small muted">証明書の照会</span></div>
+  <div id="out" class="cert"><p class="muted">照会中…</p></div>
+  <p class="small muted" style="margin-top:18px">この照会は、NPO法人 GO TO HAPPY LIFE（変更予定名／現登記名 特定非営利活動法人 日本在宅看護普及会）が発行する無料の登録証明書の有効性を示すものです。人格・信用・債務・将来の行動を保証するものではなく、公的証明書や債務保証ではありません。</p>
+</main>
+<script src="config.js"></script>
+<script>
+(async () => {
+  const out = document.getElementById('out');
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const d = (s) => (s ? new Date(s).toLocaleDateString('ja-JP') : '—');
+  const t = location.hash.slice(1);
+  if (!t) { out.innerHTML = '<p>照会用のQRコードを読み取ってください。</p>'; return; }
+  try {
+    const res = await fetch(window.GTHL_API + '/api/verify/' + encodeURIComponent(t));
+    const r = await res.json();
+    if (!r.valid) {
+      const why = { not_found: '該当する証明書がありません', revoked: 'この証明書は失効しています', expired: 'この証明書は有効期限切れです', withdrawn: 'この会員は退会しています' }[r.state || r.reason] || '確認できません';
+      out.innerHTML = `<div class="eyebrow">Not valid</div><h2 style="margin:10px 0">${why}</h2>${r.certificate_id ? `<p class="small muted">証明番号 ${esc(r.certificate_id)}</p>` : ''}<p class="small muted">本人に最新の証明書の提示を依頼してください。</p>`;
+      return;
+    }
+    out.innerHTML = `
+      <div class="head"><div><div class="eyebrow">Valid certificate</div><div class="no">本人確認・登録証明書</div></div><span class="pill ok">有効</span></div>
+      <div class="nm">${esc(r.name)}</div>
+      <div class="no">証明番号 ${esc(r.certificate_id)}</div>
+      <dl>
+        <dt>本人確認</dt><dd>${r.identity_verified ? `確認済（${d(r.identity_at)}）` : '未確認'}</dd>
+        <dt>登録</dt><dd>有効</dd>
+        <dt>債務保証</dt><dd>なし</dd>
+        <dt>緊急対応契約</dt><dd>なし</dd>
+        <dt>医療同意・代理権</dt><dd>なし</dd>
+        <dt>発行日</dt><dd>${d(r.issued_at)}</dd>
+        <dt>有効期限</dt><dd>${d(r.expires_at)}</dd>
+      </dl>
+      <p class="small muted" style="margin:16px 0 0">照会日時 ${new Date().toLocaleString('ja-JP')}。氏名は提示者の本人確認書類と照らし合わせてください。</p>`;
+  } catch {
+    out.innerHTML = '<p>通信に失敗しました。時間をおいて再度お試しください。</p>';
+  }
+})();
+</script>
+</body>
+</html>

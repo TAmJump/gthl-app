@@ -1,0 +1,11 @@
+{
+  "name": "gthl-api",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:local": "wrangler d1 execute gthl-db --local --file=schema.sql",
+    "db:remote": "wrangler d1 execute gthl-db --remote --file=schema.sql"
+  },
+  "devDependencies": { "wrangler": "^4" }
+}

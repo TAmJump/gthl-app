@@ -1,0 +1,22 @@
+name = "gthl-api"
+main = "src/index.js"
+compatibility_date = "2026-11-01"
+
+[vars]
+# 公開URL（GitHub Pages）。カンマ区切りで複数可
+ALLOWED_ORIGINS = "https://life.115en.com,https://tamjump.github.io,http://localhost:8788"
+APP_URL = "https://life.115en.com"
+SQUARE_ENV = "production"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "gthl-db"
+database_id = "REPLACE_WITH_D1_ID"
+
+# 以下はシークレット（wrangler secret put で登録。ここには書かない）
+# DATA_KEY              要配慮情報の暗号化キー（32バイトをbase64）
+# SQUARE_ACCESS_TOKEN   Square アクセストークン（タムジ株式会社アカウント）
+# SQUARE_LOCATION_ID    Square ロケーションID
+# SQUARE_APPLICATION_ID 本アプリのSquareアプリID（Webhookの絞り込み用）
+# SQUARE_WEBHOOK_KEY    Webhook 署名キー
+# SQUARE_WEBHOOK_URL    Webhook の通知先URL（署名検証に使用）
