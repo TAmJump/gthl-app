@@ -95,10 +95,12 @@ const art = (name, cls = '', style = '') =>
   `<span class="art ${cls}" style="${style}"><img src="img/${name}.png" alt="" onerror="this.style.display='none';this.parentNode.classList.add('noimg')"></span>`;
 // 21分野のピクトグラム（img/pict/01〜21.png を型にして、色はCSSのグラデーションで塗る）
 const FIELDS = ['医療・入退院', '介護・施設', '住宅・居住', '日常生活', '緊急対応・見守り', '行政・社会保障', '金銭・財産・法律', '社会参加・孤立防止', '終末期・死後事務', '就労・一般契約', '子育て・家庭', '教育・学生生活', '外国人・在留', '言語・通訳', '海外・国際生活', '社会復帰', '障害・権利擁護', 'DV・虐待・安全', '災害', 'デジタル生活', 'ペット'];
-const hueOf = (i) => Math.round((i * 360) / 21);
-const pict = (file, hue, cls = '') => `<i class="pict ${cls}" style="--m:url(img/pict/${file}.png);--hue:${hue}"></i>`;
+// 原色4色（赤・青・黄・緑）を順番に割り当てる
+const PRIMARY = ['#e60012', '#0068b7', '#f5b400', '#009944'];
+const hueOf = (i) => i;
+const pict = (file, c, cls = '') => `<i class="pict ${cls}" style="--m:url(img/pict/${file}.png);--pc:${PRIMARY[c % 4]}"></i>`;
 const fieldPict = (f, cls = '') => { const i = FIELDS.indexOf(f); return i < 0 ? '' : pict(String(i + 1).padStart(2, '0'), hueOf(i), cls); };
-const PAGE_PICT = { cert: ['13', 200], support: ['17', 280], pets: ['21', 320], wishes: ['09', 120], contracts: ['07', 100], donate: ['heart', 345], account: ['08', 160], menu: ['04', 50] };
+const PAGE_PICT = { cert: ['13', 1], support: ['17', 3], pets: ['21', 0], wishes: ['09', 2], contracts: ['07', 1], donate: ['heart', 0], account: ['08', 3], menu: ['04', 2] };
 const PAGE = { cert: ['01', 'cert', 'var(--coral-soft)'], support: ['02', 'support', 'var(--teal-soft)'], pets: ['03', 'pets', 'var(--plum-soft)'],
   wishes: ['04', 'wishes', 'var(--gold-soft)'], contracts: ['05', 'contracts', 'var(--teal-soft)'], donate: ['06', 'donate', 'var(--rose-soft)'],
   account: ['07', '', ''], menu: ['', '', ''] };
@@ -182,7 +184,7 @@ async function renderHome() {
         <p class="muted" style="margin:0">必要なときに、必要な支援を。</p>
         <div class="row"><a class="btn coral" href="#/support">支援を探す</a><a class="btn ghost" href="#/cert">証明書</a></div>
       </div>
-      <div class="minimosaic" aria-hidden="true">${['01','13','21','05','heart','14','03','17','12'].map((f, i) => `<span style="--d:${i}">${pict(f, (i * 40) % 360, 'mo')}</span>`).join('')}</div>
+      <div class="minimosaic" aria-hidden="true">${['01','13','21','05','heart','14','03','17','12'].map((f, i) => `<span style="--d:${i}">${pict(f, i, 'mo')}</span>`).join('')}</div>
     </div>
     <a class="tile t-card" href="#/cert">
       <span class="seal"></span>
@@ -199,12 +201,12 @@ async function renderHome() {
       <div><b>${c.open_requests}</b><small>対応中の申込</small></div>
       <div><b>${c.contracts}</b><small>登録した契約</small></div>
     </div>
-    <a class="tile t-c teal" href="#/support"><span class="k">02 Support</span><h3>生活支援</h3><span class="small muted">21分野・240項目から探す</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('17', 280, 'lg')}</span></a>
-    <a class="tile t-c plum" href="#/pets"><span class="k">03 Pets</span><h3>マイペット</h3><span class="small muted">${c.pets}件登録</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('21', 320, 'lg')}</span></a>
-    <a class="tile t-c gold" href="#/wishes"><span class="k">04 Wishes</span><h3>生前・死後の希望</h3><span class="small muted">無料で記録</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('09', 120, 'lg')}</span></a>
-    <a class="tile t-c paper" href="#/contracts"><span class="k">05 Contracts</span><h3>契約の管理</h3><span class="small muted">他社の契約もまとめて</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('07', 100, 'lg')}</span></a>
-    <a class="tile t-c rose" href="#/donate"><span class="k">06 Support us</span><h3>活動を支援</h3><span class="small muted">任意の寄付</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('heart', 345, 'lg')}</span></a>
-    <a class="tile t-c coral" href="#/cert"><span class="k">01 Certificate</span><h3>デジタル証明書</h3><span class="small muted">QRで提示</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('13', 200, 'lg')}</span></a>
+    <a class="tile t-c teal" href="#/support"><span class="k">02 Support</span><h3>生活支援</h3><span class="small muted">21分野・240項目から探す</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('17', 3, 'lg')}</span></a>
+    <a class="tile t-c plum" href="#/pets"><span class="k">03 Pets</span><h3>マイペット</h3><span class="small muted">${c.pets}件登録</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('21', 0, 'lg')}</span></a>
+    <a class="tile t-c gold" href="#/wishes"><span class="k">04 Wishes</span><h3>生前・死後の希望</h3><span class="small muted">無料で記録</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('09', 2, 'lg')}</span></a>
+    <a class="tile t-c paper" href="#/contracts"><span class="k">05 Contracts</span><h3>契約の管理</h3><span class="small muted">他社の契約もまとめて</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('07', 1, 'lg')}</span></a>
+    <a class="tile t-c rose" href="#/donate"><span class="k">06 Support us</span><h3>活動を支援</h3><span class="small muted">任意の寄付</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('heart', 0, 'lg')}</span></a>
+    <a class="tile t-c coral" href="#/cert"><span class="k">01 Certificate</span><h3>デジタル証明書</h3><span class="small muted">QRで提示</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('13', 1, 'lg')}</span></a>
   </section>
   <section class="fieldstrip">
     <div class="row" style="justify-content:space-between;align-items:baseline"><h3>21分野から探す</h3><a class="small" href="#/support">すべて見る</a></div>
@@ -553,10 +555,10 @@ async function renderAccount() {
 function renderMenu() {
   view.innerHTML = `${head('Menu', 'その他')}
   <div class="bento">
-    <a class="tile t-c plum" href="#/pets"><span class="k">03</span><h3>マイペット</h3><span class="go">${icon('arrow')}</span><span class="badge">${pict('21', 320, 'lg')}</span></a>
-    <a class="tile t-c paper" href="#/contracts"><span class="k">05</span><h3>契約の管理</h3><span class="go">${icon('arrow')}</span><span class="badge">${pict('07', 100, 'lg')}</span></a>
-    <a class="tile t-c rose" href="#/donate"><span class="k">06</span><h3>活動を支援</h3><span class="go">${icon('arrow')}</span><span class="badge">${pict('heart', 345, 'lg')}</span></a>
-    <a class="tile t-c gold" href="#/account"><span class="k">07</span><h3>アカウント</h3><span class="go">${icon('arrow')}</span><span class="badge">${pict('08', 160, 'lg')}</span></a>
+    <a class="tile t-c plum" href="#/pets"><span class="k">03</span><h3>マイペット</h3><span class="go">${icon('arrow')}</span><span class="badge">${pict('21', 0, 'lg')}</span></a>
+    <a class="tile t-c paper" href="#/contracts"><span class="k">05</span><h3>契約の管理</h3><span class="go">${icon('arrow')}</span><span class="badge">${pict('07', 1, 'lg')}</span></a>
+    <a class="tile t-c rose" href="#/donate"><span class="k">06</span><h3>活動を支援</h3><span class="go">${icon('arrow')}</span><span class="badge">${pict('heart', 0, 'lg')}</span></a>
+    <a class="tile t-c gold" href="#/account"><span class="k">07</span><h3>アカウント</h3><span class="go">${icon('arrow')}</span><span class="badge">${pict('08', 3, 'lg')}</span></a>
   </div>`;
 }
 

@@ -212,8 +212,7 @@ table.t th{font-weight:500;color:var(--stone);font-size:12px;letter-spacing:.04e
 .scroll{overflow-x:auto}
 
 /* ---------- rainbow pictograms ---------- */
-.pict{display:inline-block;flex:none;width:28px;height:28px;-webkit-mask:var(--m) center/contain no-repeat;mask:var(--m) center/contain no-repeat;
-  background:linear-gradient(135deg,hsl(var(--hue) 88% 56%),hsl(calc(var(--hue) + 55) 92% 58%) 60%,hsl(calc(var(--hue) + 110) 90% 62%))}
+.pict{display:inline-block;flex:none;width:28px;height:28px;-webkit-mask:var(--m) center/contain no-repeat;mask:var(--m) center/contain no-repeat;background:var(--pc,#e60012)}
 .pict.sm{width:18px;height:18px}
 .pict.md{width:40px;height:40px}
 .pict.lg{width:48px;height:48px}
@@ -232,7 +231,7 @@ table.t th{font-weight:500;color:var(--stone);font-size:12px;letter-spacing:.04e
 .mosaic span{aspect-ratio:1;display:flex;animation:pop .6s calc(var(--d) * 40ms) both}
 .mosaic span:hover .pict{transform:scale(1.15) rotate(-6deg)}
 .mosaic .pict{transition:transform .25s}
-.mosaic .stamp{position:absolute;right:-44px;top:-52px;width:112px;height:112px;border-radius:50%;border:1px solid var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:var(--gold-soft);transform:rotate(-8deg)}
+.mosaic .stamp{position:absolute;right:-48px;top:-74px;width:112px;height:112px;border-radius:50%;border:1px solid var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:var(--gold-soft);transform:rotate(-8deg)}
 .mosaic .stamp b{font:600 28px/1 var(--latin)} .mosaic .stamp small{font-size:10px;line-height:1.4}
 @keyframes pop{from{opacity:0;transform:scale(.6) translateY(8px)}to{opacity:1;transform:none}}
 @media(max-width:860px){.mosaic{gap:10px;padding:16px}.mosaic .stamp{width:84px;height:84px;right:-6px;top:-40px}.mosaic .stamp b{font-size:22px}}
@@ -288,3 +287,14 @@ body{letter-spacing:.02em}
 .pagehead .no{font-weight:600;letter-spacing:.06em;font-size:13px;text-transform:uppercase}
 .mosaic .stamp b{font-weight:800}
 .tile h3{font-weight:700}
+
+/* 原色・赤アクセント */
+.hero h1 em{background:none;text-decoration:underline;text-decoration-color:#e60012;text-decoration-thickness:.12em;text-underline-offset:.16em}
+.mosaic .stamp{background:#fff!important;border:3px solid #e60012!important;box-shadow:none!important;color:#e60012}
+.mosaic .stamp small{color:#e60012}
+.minimosaic{background:#f4f4f0}
+.minimosaic span{background:#fff}
+.headpict::before{background:#f4f4f0;opacity:1;filter:none}
+.rail a:nth-child(5n+2) svg.i{stroke:#e60012}.rail a:nth-child(5n+3) svg.i{stroke:#0068b7}.rail a:nth-child(5n+4) svg.i{stroke:#d9a000}.rail a:nth-child(5n+5) svg.i{stroke:#009944}.rail a:nth-child(5n+6) svg.i{stroke:#e60012}
+.tabbar a:nth-child(1) svg.i{stroke:#e60012}.tabbar a:nth-child(2) svg.i{stroke:#0068b7}.tabbar a:nth-child(3) svg.i{stroke:#d9a000}.tabbar a:nth-child(4) svg.i{stroke:#009944}.tabbar a:nth-child(5) svg.i{stroke:#e60012}
+.tile .go svg.i{stroke:currentColor}
