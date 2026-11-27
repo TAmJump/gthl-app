@@ -93,6 +93,12 @@ document.querySelectorAll('[data-ic]').forEach((el) => (el.outerHTML = icon(el.d
 // 画像スロット。img/ に画像が無いときは色ブロックだけを表示する
 const art = (name, cls = '', style = '') =>
   `<span class="art ${cls}" style="${style}"><img src="img/${name}.png" alt="" onerror="this.style.display='none';this.parentNode.classList.add('noimg')"></span>`;
+// 21分野のピクトグラム（img/pict/01〜21.png を型にして、色はCSSのグラデーションで塗る）
+const FIELDS = ['医療・入退院', '介護・施設', '住宅・居住', '日常生活', '緊急対応・見守り', '行政・社会保障', '金銭・財産・法律', '社会参加・孤立防止', '終末期・死後事務', '就労・一般契約', '子育て・家庭', '教育・学生生活', '外国人・在留', '言語・通訳', '海外・国際生活', '社会復帰', '障害・権利擁護', 'DV・虐待・安全', '災害', 'デジタル生活', 'ペット'];
+const hueOf = (i) => Math.round((i * 360) / 21);
+const pict = (file, hue, cls = '') => `<i class="pict ${cls}" style="--m:url(img/pict/${file}.png);--hue:${hue}"></i>`;
+const fieldPict = (f, cls = '') => { const i = FIELDS.indexOf(f); return i < 0 ? '' : pict(String(i + 1).padStart(2, '0'), hueOf(i), cls); };
+const PAGE_PICT = { cert: ['13', 200], support: ['17', 280], pets: ['21', 320], wishes: ['09', 120], contracts: ['07', 100], donate: ['heart', 345], account: ['08', 160], menu: ['04', 50] };
 const PAGE = { cert: ['01', 'cert', 'var(--coral-soft)'], support: ['02', 'support', 'var(--teal-soft)'], pets: ['03', 'pets', 'var(--plum-soft)'],
   wishes: ['04', 'wishes', 'var(--gold-soft)'], contracts: ['05', 'contracts', 'var(--teal-soft)'], donate: ['06', 'donate', 'var(--rose-soft)'],
   account: ['07', '', ''], menu: ['', '', ''] };
@@ -101,7 +107,7 @@ const head = (eyebrow, title, lead = '') => {
   const [no, img, blk] = PAGE[currentKey] || ['', '', ''];
   return `<div class="topbrand"><b>115<i>en.</i></b><span class="small muted">GO TO HAPPY LIFE</span></div>
    <div class="pagehead"><div><div class="no">${no ? no + ' / ' : ''}${eyebrow}</div><h1>${title}</h1>${lead ? `<p class="muted">${lead}</p>` : ''}</div>
-   ${img ? art(img, '', `--blk:${blk};--h:150px`) : ''}</div>`;
+   ${PAGE_PICT[currentKey] ? `<span class="headpict">${pict(PAGE_PICT[currentKey][0], PAGE_PICT[currentKey][1], 'xl')}</span>` : ''}</div>`;
 };
 
 // ---------------- 未ログイン ----------------
@@ -114,9 +120,8 @@ function renderAuth(mode = 'register') {
       <span class="eyebrow">Life without barriers</span>
       <h1>家族の有無に<br>かかわらず、<br><em>必要なときに</em><br><em>必要な支援を。</em></h1>
       <p class="muted" style="margin:0;max-width:520px">本人登録と事実の証明書は無料。実際の支援が必要なときだけ、内容と料金に同意してから申し込む仕組み。</p>
-      <div class="collage">
-        ${art('hero-main', 'a1 frame', '--blk:var(--coral-soft)')}
-        ${art('hero-sub', 'a2')}
+      <div class="mosaic" aria-hidden="true">
+        ${FIELDS.map((f, i) => `<span style="--d:${i}">${fieldPict(f, 'mo')}</span>`).join('')}
         <div class="stamp"><b>FREE</b><small>基本登録<br>証明書</small></div>
       </div>
       <div class="facts">
@@ -177,7 +182,7 @@ async function renderHome() {
         <p class="muted" style="margin:0">必要なときに、必要な支援を。</p>
         <div class="row"><a class="btn coral" href="#/support">支援を探す</a><a class="btn ghost" href="#/cert">証明書</a></div>
       </div>
-      ${art('home', 'frame')}
+      <div class="minimosaic" aria-hidden="true">${['01','13','21','05','heart','14','03','17','12'].map((f, i) => `<span style="--d:${i}">${pict(f, (i * 40) % 360, 'mo')}</span>`).join('')}</div>
     </div>
     <a class="tile t-card" href="#/cert">
       <span class="seal"></span>
@@ -194,12 +199,16 @@ async function renderHome() {
       <div><b>${c.open_requests}</b><small>対応中の申込</small></div>
       <div><b>${c.contracts}</b><small>登録した契約</small></div>
     </div>
-    <a class="tile t-c teal" href="#/support"><span class="k">02 Support</span><h3>生活支援</h3><span class="small muted">21分野・240項目から探す</span><span class="go">${icon('arrow')}</span><span class="badge">${icon('support')}</span></a>
-    <a class="tile t-c plum" href="#/pets"><span class="k">03 Pets</span><h3>マイペット</h3><span class="small muted">${c.pets}件登録</span><span class="go">${icon('arrow')}</span><span class="badge">${icon('pets')}</span></a>
-    <a class="tile t-c gold" href="#/wishes"><span class="k">04 Wishes</span><h3>生前・死後の希望</h3><span class="small muted">無料で記録</span><span class="go">${icon('arrow')}</span><span class="badge">${icon('wishes')}</span></a>
-    <a class="tile t-c paper" href="#/contracts"><span class="k">05 Contracts</span><h3>契約の管理</h3><span class="small muted">他社の契約もまとめて</span><span class="go">${icon('arrow')}</span><span class="badge">${icon('contracts')}</span></a>
-    <a class="tile t-c rose" href="#/donate"><span class="k">06 Support us</span><h3>活動を支援</h3><span class="small muted">任意の寄付</span><span class="go">${icon('arrow')}</span><span class="badge">${icon('donate')}</span></a>
-    <a class="tile t-c coral" href="#/cert"><span class="k">01 Certificate</span><h3>デジタル証明書</h3><span class="small muted">QRで提示</span><span class="go">${icon('arrow')}</span><span class="badge">${icon('cert')}</span></a>
+    <a class="tile t-c teal" href="#/support"><span class="k">02 Support</span><h3>生活支援</h3><span class="small muted">21分野・240項目から探す</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('17', 280, 'lg')}</span></a>
+    <a class="tile t-c plum" href="#/pets"><span class="k">03 Pets</span><h3>マイペット</h3><span class="small muted">${c.pets}件登録</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('21', 320, 'lg')}</span></a>
+    <a class="tile t-c gold" href="#/wishes"><span class="k">04 Wishes</span><h3>生前・死後の希望</h3><span class="small muted">無料で記録</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('09', 120, 'lg')}</span></a>
+    <a class="tile t-c paper" href="#/contracts"><span class="k">05 Contracts</span><h3>契約の管理</h3><span class="small muted">他社の契約もまとめて</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('07', 100, 'lg')}</span></a>
+    <a class="tile t-c rose" href="#/donate"><span class="k">06 Support us</span><h3>活動を支援</h3><span class="small muted">任意の寄付</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('heart', 345, 'lg')}</span></a>
+    <a class="tile t-c coral" href="#/cert"><span class="k">01 Certificate</span><h3>デジタル証明書</h3><span class="small muted">QRで提示</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('13', 200, 'lg')}</span></a>
+  </section>
+  <section class="fieldstrip">
+    <div class="row" style="justify-content:space-between;align-items:baseline"><h3>21分野から探す</h3><a class="small" href="#/support">すべて見る</a></div>
+    <div class="fgrid">${FIELDS.map((f) => `<a href="#/support?f=${encodeURIComponent(f)}">${fieldPict(f, 'md')}<span>${esc(f)}</span></a>`).join('')}</div>
   </section>
   ${verified ? '' : '<div class="note" style="margin-top:18px">本人確認は未完了。マイナンバーカードによるオンライン確認は導入準備中のため、当面は面談・書類で確認します。</div>'}`;
 }
@@ -277,9 +286,10 @@ async function renderCert() {
 const REQ_LABEL = { received: '受付', quoted: '見積提示', approved: '見積に同意', started: '対応中', done: '完了', cancelled: '取消' };
 const REQ_STEP = { received: 1, quoted: 2, approved: 3, started: 4, done: 5, cancelled: 0 };
 let supportState = { field: '', q: '' };
-const CHIP_COLORS = ['var(--coral)', 'var(--teal)', 'var(--gold)', 'var(--plum)', 'var(--rose)'];
 
 async function renderSupport() {
+  const qf = new URLSearchParams(location.hash.split('?')[1] || '').get('f');
+  if (qf) supportState.field = qf;
   const [cat, r] = await Promise.all([loadCatalog(), api('/api/requests')]);
   const fields = [...new Set(cat.map((c) => c.field))];
   const counts = {}; cat.forEach((c) => (counts[c.field] = (counts[c.field] || 0) + 1));
@@ -292,7 +302,7 @@ async function renderSupport() {
     <input type="text" id="q" placeholder="キーワードで探す（例：入院、通訳、散歩）" value="${esc(supportState.q)}">
     <div class="chips" id="chips">
       <button class="chip ${supportState.field ? '' : 'on'}" data-f="">すべて<em>${cat.length}</em></button>
-      ${fields.map((f, i) => `<button class="chip ${supportState.field === f ? 'on' : ''}" style="--c:${CHIP_COLORS[i % CHIP_COLORS.length]}" data-f="${esc(f)}">${esc(f)}<em>${counts[f]}</em></button>`).join('')}
+      ${fields.map((f) => `<button class="chip ${supportState.field === f ? 'on' : ''}" data-f="${esc(f)}">${fieldPict(f, 'sm')}${esc(f)}<em>${counts[f]}</em></button>`).join('')}
     </div>
     <div class="small muted" id="cnt"></div>
     <div class="items" id="items"></div>
@@ -302,11 +312,11 @@ async function renderSupport() {
 
   const draw = () => {
     const q = supportState.q.toLowerCase();
-    if (!supportState.field && !q) { $('#cnt').textContent = ''; $('#items').innerHTML = '<div class="empty" style="width:100%">分野を選ぶか、キーワードで探してください</div>'; return; }
+    if (!supportState.field && !q) { $('#cnt').textContent = ''; $('#items').innerHTML = `<div class="fgrid" style="width:100%">${fields.map((f) => `<button type="button" data-pick="${esc(f)}">${fieldPict(f, 'md')}<span>${esc(f)}</span></button>`).join('')}</div>`; return; }
     const list = cat.filter((c) => (!supportState.field || c.field === supportState.field) && (!q || (c.field + c.name + c.how).toLowerCase().includes(q)));
     const shown = list.slice(0, 60);
     $('#cnt').textContent = `${list.length}件${list.length > 60 ? '（上位60件を表示。キーワードで絞り込み）' : ''}`;
-    $('#items').innerHTML = shown.map((c) => `<button class="item" data-id="${c.id}">${supportState.field ? '' : `<small>${esc(c.field)}</small>`}<b>${esc(c.name)}</b></button>`).join('') || '<div class="empty">該当なし</div>';
+    $('#items').innerHTML = shown.map((c) => `<button class="item" data-id="${c.id}">${supportState.field ? '' : fieldPict(c.field, 'sm')}<b>${esc(c.name)}</b></button>`).join('') || '<div class="empty">該当なし</div>';
   };
   draw();
   $('#q').oninput = (e) => { supportState.q = e.target.value; draw(); };
@@ -316,7 +326,11 @@ async function renderSupport() {
     view.querySelectorAll('.chip').forEach((x) => x.classList.toggle('on', x === b));
     draw();
   };
-  $('#items').onclick = (e) => { const b = e.target.closest('.item'); if (b) openItem(cat.find((c) => c.id === Number(b.dataset.id))); };
+  $('#items').onclick = (e) => {
+    const pk = e.target.closest('[data-pick]');
+    if (pk) { supportState.field = pk.dataset.pick; view.querySelectorAll('.chip').forEach((x) => x.classList.toggle('on', x.dataset.f === supportState.field)); draw(); return; }
+    const b = e.target.closest('.item'); if (b) openItem(cat.find((c) => c.id === Number(b.dataset.id)));
+  };
   view.querySelectorAll('[data-approve]').forEach((b) => (b.onclick = async () => {
     try { await api(`/api/requests/${b.dataset.approve}/approve`, { method: 'POST' }); toast('見積に同意'); renderSupport(); } catch (e) { toast(e.message); }
   }));
@@ -343,7 +357,7 @@ function reqRow(x) {
 
 function openItem(c) {
   modal(`
-    <span class="eyebrow">${esc(c.field)} / No.${String(c.id).padStart(3, '0')}</span>
+    <div class="row" style="gap:14px">${fieldPict(c.field, 'lg')}<span class="eyebrow">${esc(c.field)} / No.${String(c.id).padStart(3, '0')}</span></div>
     <h2 style="margin:8px 0 14px">${esc(c.name)}</h2>
     <div class="kv"><span>対応</span><span>${esc(c.how)}</span><span>費用の負担</span><span>${esc(c.payer)}</span><span>備考</span><span>${esc(c.note)}</span></div>
     <form id="rf" class="stack" style="margin-top:18px">
@@ -539,10 +553,10 @@ async function renderAccount() {
 function renderMenu() {
   view.innerHTML = `${head('Menu', 'その他')}
   <div class="bento">
-    <a class="tile t-c plum" href="#/pets"><span class="k">03</span><h3>マイペット</h3><span class="go">${icon('arrow')}</span><span class="badge">${icon('pets')}</span></a>
-    <a class="tile t-c paper" href="#/contracts"><span class="k">05</span><h3>契約の管理</h3><span class="go">${icon('arrow')}</span><span class="badge">${icon('contracts')}</span></a>
-    <a class="tile t-c rose" href="#/donate"><span class="k">06</span><h3>活動を支援</h3><span class="go">${icon('arrow')}</span><span class="badge">${icon('donate')}</span></a>
-    <a class="tile t-c gold" href="#/account"><span class="k">07</span><h3>アカウント</h3><span class="go">${icon('arrow')}</span><span class="badge">${icon('account')}</span></a>
+    <a class="tile t-c plum" href="#/pets"><span class="k">03</span><h3>マイペット</h3><span class="go">${icon('arrow')}</span><span class="badge">${pict('21', 320, 'lg')}</span></a>
+    <a class="tile t-c paper" href="#/contracts"><span class="k">05</span><h3>契約の管理</h3><span class="go">${icon('arrow')}</span><span class="badge">${pict('07', 100, 'lg')}</span></a>
+    <a class="tile t-c rose" href="#/donate"><span class="k">06</span><h3>活動を支援</h3><span class="go">${icon('arrow')}</span><span class="badge">${pict('heart', 345, 'lg')}</span></a>
+    <a class="tile t-c gold" href="#/account"><span class="k">07</span><h3>アカウント</h3><span class="go">${icon('arrow')}</span><span class="badge">${pict('08', 160, 'lg')}</span></a>
   </div>`;
 }
 
