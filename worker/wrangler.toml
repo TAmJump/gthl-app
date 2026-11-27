@@ -11,7 +11,7 @@ SQUARE_ENV = "production"
 [[d1_databases]]
 binding = "DB"
 database_name = "gthl-db"
-database_id = "REPLACE_WITH_D1_ID"
+database_id = "4f6f157a-7d67-40da-8b4f-926ed8b81a26"
 
 # 以下はシークレット（wrangler secret put で登録。ここには書かない）
 # DATA_KEY              要配慮情報の暗号化キー（32バイトをbase64）
