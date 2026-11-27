@@ -380,3 +380,13 @@ a.tile:hover{border-color:var(--ink)!important;transform:none}
 svg.pict.xl{stroke-width:1.5}
 svg.pict.lg{stroke-width:2}
 @media(max-width:860px){.hero h1{font-size:22.5px;letter-spacing:-.06em}}
+/* 115en. アイコン集（PNG） */
+img.pict{background:none!important;-webkit-mask:none!important;mask:none!important;object-fit:contain;display:inline-block;flex:none}
+img.pict.sm{width:20px;height:20px}
+img.pict.md{width:46px;height:46px}
+img.pict.lg{width:52px;height:52px}
+img.pict.xl{width:118px;height:118px}
+img.pict.mo{width:100%;height:100%}
+.chip.on img.pict{filter:brightness(0) invert(1)}
+.t-c .badge img.pict.lg{width:52px;height:52px}
+@media(max-width:860px){.t-c .badge img.pict.lg{width:34px;height:34px}.headpict img.pict.xl{width:70px;height:70px}}

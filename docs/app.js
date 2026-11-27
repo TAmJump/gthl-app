@@ -95,42 +95,14 @@ const art = (name, cls = '', style = '') =>
   `<span class="art ${cls}" style="${style}"><img src="img/${name}.png" alt="" onerror="this.style.display='none';this.parentNode.classList.add('noimg')"></span>`;
 // 21分野のピクトグラム（img/pict/01〜21.png を型にして、色はCSSのグラデーションで塗る）
 const FIELDS = ['医療・入退院', '介護・施設', '住宅・居住', '日常生活', '緊急対応・見守り', '行政・社会保障', '金銭・財産・法律', '社会参加・孤立防止', '終末期・死後事務', '就労・一般契約', '子育て・家庭', '教育・学生生活', '外国人・在留', '言語・通訳', '海外・国際生活', '社会復帰', '障害・権利擁護', 'DV・虐待・安全', '災害', 'デジタル生活', 'ペット'];
-// 線画アイコン（ブランド構想と同じ 48px・線幅2.4・角丸）。21分野＋汎用
-const FI = [
-  '<path d="M10 4h28v40H10zM24 10v14M17 17h14M19 44V32h10v12"/>',
-  '<path d="M6 22 24 7l18 15M10 19v24h28V19"/><path d="M24 37c-6-4-8-8-5-11 2-2 4-1 5 1 1-2 3-3 5-1 3 3 1 7-5 11z"/>',
-  '<path d="M6 22 24 7l18 15M10 19v24h28V19M20 43V31h8v12"/>',
-  '<path d="M10 16h28l-3 27H13zM18 16v-4a6 6 0 0 1 12 0v4"/>',
-  '<path d="M4 15h26l12 13v12H4zM30 15v13h12M12 22h12M18 16v12"/><circle cx="13" cy="40" r="5"/><circle cx="34" cy="40" r="5"/>',
-  '<path d="M6 18 24 7l18 11zM11 18v20M19 18v20M29 18v20M37 18v20M6 42h36"/>',
-  '<path d="M24 5v35M9 40h30M6 13h36M11 13 4 28h14zM37 13 30 28h14z"/>',
-  '<circle cx="16" cy="15" r="6"/><circle cx="32" cy="15" r="6"/><path d="M4 41c1-8 6-12 12-12s11 4 12 12M20 41c1-8 6-12 12-12s11 4 12 12"/>',
-  '<path d="M24 40c-8 0-14-5-16-12 7 0 12 3 16 8 4-5 9-8 16-8-2 7-8 12-16 12zM24 35c-4-6-4-13 0-21 4 8 4 15 0 21z"/>',
-  '<rect x="5" y="15" width="38" height="27" rx="3"/><path d="M17 15V8h14v7M5 25h38M21 23h6v5h-6z"/>',
-  '<circle cx="16" cy="9" r="4"/><path d="M16 13v15M9 19h14M16 28l-5 14M16 28l5 14"/><circle cx="34" cy="22" r="3"/><path d="M34 25v9M29 29h10M34 34l-3 8M34 34l3 8"/>',
-  '<path d="M4 18 24 9l20 9-20 9zM12 22v10c0 3 5 6 12 6s12-3 12-6V22M44 18v10"/>',
-  '<rect x="11" y="4" width="26" height="40" rx="3"/><circle cx="24" cy="21" r="7"/><path d="M17 21h14M24 14c3 4 3 10 0 14M24 14c-3 4-3 10 0 14M18 36h12"/>',
-  '<path d="M6 8h22v14H14l-6 5v-5H6zM20 26v6h14l6 5v-5h2V18h-8"/>',
-  '<path d="M43 6 5 21l14 6 4 15 6-10 10 6zM19 27 43 6"/>',
-  '<path d="M22 6h18v36H22M4 24h22M18 16l8 8-8 8"/>',
-  '<circle cx="24" cy="10" r="5"/><path d="M16 26c1-5 4-8 8-8s7 3 8 8M4 32h9l7 3h9a3 3 0 0 1 0 6H18M29 41l11-6a3 3 0 0 1 3 5l-12 7H4"/>',
-  '<path d="M24 4 8 10v12c0 11 7 18 16 22 9-4 16-11 16-22V10z"/><rect x="18" y="22" width="12" height="10" rx="2"/><path d="M20 22v-3a4 4 0 0 1 8 0v3"/>',
-  '<path d="M5 24a19 19 0 0 1 38 0zM24 24v14a4 4 0 0 1-8 0M24 5v2"/>',
-  '<rect x="14" y="4" width="20" height="40" rx="3"/><path d="M21 38h6M20 10h8"/>',
-  '<circle cx="13" cy="21" r="3.5"/><circle cx="19" cy="12" r="3.5"/><circle cx="29" cy="12" r="3.5"/><circle cx="35" cy="21" r="3.5"/><path d="M16 37c0-6 4-11 8-11s8 5 8 11c0 4-4 5-8 5s-8-1-8-5z"/>',
-];
-const FI_EXTRA = {
-  heart: '<path d="M24 19C10 3 0 23 24 39 48 23 38 3 24 19z"/>',
-  card: '<rect x="4" y="10" width="40" height="28" rx="3"/><circle cx="16" cy="22" r="4"/><path d="M9 33c1-3 4-5 7-5s6 2 7 5M28 19h11M28 25h11M28 31h7"/>',
-};
+// 115en. アイコン集（img/icons/01〜24.png・墨＋コーラルの2色）
+// 01医療 02救急 03介護 04入院・療養 05生活支援 06買い物・日用品 07緊急連絡 08身元保証 09弁護士 10司法書士 11税理士 12社労士
+// 13行政・手続き 14契約・委任 15財産管理 16遺言・相続 17相談 18連絡・メッセージ 19海外・在留 20転居・住まい 21見守り・支援 22個人情報保護 23学び・就労支援 24ペット支援
+const FIELD_ICON = ['04', '03', '05', '06', '07', '13', '15', '17', '16', '14', '12', '23', '19', '18', '19', '20', '09', '22', '02', '18', '24'];
 const hueOf = (i) => i;
-// 互換用：pict('01'〜'21' or 'heart'/'card', 色番号(未使用), サイズ)
-const pict = (file, c, cls = '') => {
-  const body = FI_EXTRA[file] || FI[Number(file) - 1] || '';
-  return `<svg class="pict fi ${cls}" viewBox="0 0 48 48" aria-hidden="true">${body}</svg>`;
-};
-const fieldPict = (f, cls = '') => { const i = FIELDS.indexOf(f); return i < 0 ? '' : pict(String(i + 1).padStart(2, '0'), hueOf(i), cls); };
-const PAGE_PICT = { cert: ['card', 1], support: ['17', 3], pets: ['21', 0], wishes: ['09', 2], contracts: ['07', 1], donate: ['heart', 0], account: ['08', 3], menu: ['04', 2] };
+const pict = (file, c, cls = '') => `<img class="pict pi ${cls}" src="img/icons/${file}.png" alt="" loading="lazy">`;
+const fieldPict = (f, cls = '') => { const i = FIELDS.indexOf(f); return i < 0 ? '' : pict(FIELD_ICON[i], i, cls); };
+const PAGE_PICT = { cert: ['08', 0], support: ['21', 0], pets: ['24', 0], wishes: ['16', 0], contracts: ['14', 0], donate: ['17', 0], account: ['12', 0], menu: ['06', 0] };
 const PAGE = { cert: ['01', 'cert', 'var(--coral-soft)'], support: ['02', 'support', 'var(--teal-soft)'], pets: ['03', 'pets', 'var(--plum-soft)'],
   wishes: ['04', 'wishes', 'var(--gold-soft)'], contracts: ['05', 'contracts', 'var(--teal-soft)'], donate: ['06', 'donate', 'var(--rose-soft)'],
   account: ['07', '', ''], menu: ['', '', ''] };
@@ -216,7 +188,7 @@ async function renderHome() {
         <p class="muted" style="margin:0">必要なときに、必要な支援を。</p>
         <div class="row"><a class="btn coral" href="#/support">支援を探す</a><a class="btn ghost" href="#/cert">証明書</a></div>
       </div>
-      <div class="minimosaic" aria-hidden="true">${['01','13','21','05','heart','14','03','17','12'].map((f, i) => `<span style="--d:${i}">${pict(f, i, 'mo')}</span>`).join('')}</div>
+      <div class="minimosaic" aria-hidden="true">${['01','02','03','04','05','07','08','18','24'].map((f, i) => `<span style="--d:${i}">${pict(f, i, 'mo')}</span>`).join('')}</div>
     </div>
     <a class="tile t-card" href="#/cert">
       <span class="seal"></span>
@@ -233,12 +205,12 @@ async function renderHome() {
       <div><b>${c.open_requests}</b><small>対応中の申込</small></div>
       <div><b>${c.contracts}</b><small>登録した契約</small></div>
     </div>
-    <a class="tile t-c teal" href="#/support"><span class="k">02 Support</span><h3>生活支援</h3><span class="small muted">21分野・240項目から探す</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('17', 3, 'lg')}</span></a>
-    <a class="tile t-c plum" href="#/pets"><span class="k">03 Pets</span><h3>マイペット</h3><span class="small muted">${c.pets}件登録</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('21', 0, 'lg')}</span></a>
-    <a class="tile t-c gold" href="#/wishes"><span class="k">04 Wishes</span><h3>生前・死後の希望</h3><span class="small muted">無料で記録</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('09', 2, 'lg')}</span></a>
-    <a class="tile t-c paper" href="#/contracts"><span class="k">05 Contracts</span><h3>契約の管理</h3><span class="small muted">他社の契約もまとめて</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('07', 1, 'lg')}</span></a>
-    <a class="tile t-c rose" href="#/donate"><span class="k">06 Support us</span><h3>活動を支援</h3><span class="small muted">任意の寄付</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('heart', 0, 'lg')}</span></a>
-    <a class="tile t-c coral" href="#/cert"><span class="k">01 Certificate</span><h3>デジタル証明書</h3><span class="small muted">QRで提示</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('card', 1, 'lg')}</span></a>
+    <a class="tile t-c teal" href="#/support"><span class="k">02 Support</span><h3>生活支援</h3><span class="small muted">21分野・240項目から探す</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('21', 3, 'lg')}</span></a>
+    <a class="tile t-c plum" href="#/pets"><span class="k">03 Pets</span><h3>マイペット</h3><span class="small muted">${c.pets}件登録</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('24', 0, 'lg')}</span></a>
+    <a class="tile t-c gold" href="#/wishes"><span class="k">04 Wishes</span><h3>生前・死後の希望</h3><span class="small muted">無料で記録</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('16', 2, 'lg')}</span></a>
+    <a class="tile t-c paper" href="#/contracts"><span class="k">05 Contracts</span><h3>契約の管理</h3><span class="small muted">他社の契約もまとめて</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('14', 1, 'lg')}</span></a>
+    <a class="tile t-c rose" href="#/donate"><span class="k">06 Support us</span><h3>活動を支援</h3><span class="small muted">任意の寄付</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('17', 0, 'lg')}</span></a>
+    <a class="tile t-c coral" href="#/cert"><span class="k">01 Certificate</span><h3>デジタル証明書</h3><span class="small muted">QRで提示</span><span class="go">${icon('arrow')}</span><span class="badge">${pict('08', 1, 'lg')}</span></a>
   </section>
   <section class="fieldstrip">
     <div class="row" style="justify-content:space-between;align-items:baseline"><h3>21分野から探す</h3><a class="small" href="#/support">すべて見る</a></div>
@@ -587,10 +559,10 @@ async function renderAccount() {
 function renderMenu() {
   view.innerHTML = `${head('Menu', 'その他')}
   <div class="bento">
-    <a class="tile t-c plum" href="#/pets"><span class="k">03</span><h3>マイペット</h3><span class="go">${icon('arrow')}</span><span class="badge">${pict('21', 0, 'lg')}</span></a>
-    <a class="tile t-c paper" href="#/contracts"><span class="k">05</span><h3>契約の管理</h3><span class="go">${icon('arrow')}</span><span class="badge">${pict('07', 1, 'lg')}</span></a>
-    <a class="tile t-c rose" href="#/donate"><span class="k">06</span><h3>活動を支援</h3><span class="go">${icon('arrow')}</span><span class="badge">${pict('heart', 0, 'lg')}</span></a>
-    <a class="tile t-c gold" href="#/account"><span class="k">07</span><h3>アカウント</h3><span class="go">${icon('arrow')}</span><span class="badge">${pict('08', 3, 'lg')}</span></a>
+    <a class="tile t-c plum" href="#/pets"><span class="k">03</span><h3>マイペット</h3><span class="go">${icon('arrow')}</span><span class="badge">${pict('24', 0, 'lg')}</span></a>
+    <a class="tile t-c paper" href="#/contracts"><span class="k">05</span><h3>契約の管理</h3><span class="go">${icon('arrow')}</span><span class="badge">${pict('14', 1, 'lg')}</span></a>
+    <a class="tile t-c rose" href="#/donate"><span class="k">06</span><h3>活動を支援</h3><span class="go">${icon('arrow')}</span><span class="badge">${pict('17', 0, 'lg')}</span></a>
+    <a class="tile t-c gold" href="#/account"><span class="k">07</span><h3>アカウント</h3><span class="go">${icon('arrow')}</span><span class="badge">${pict('12', 3, 'lg')}</span></a>
   </div>`;
 }
 
