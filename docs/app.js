@@ -115,6 +115,34 @@ const head = (eyebrow, title, lead = '') => {
 };
 
 // ---------------- 未ログイン ----------------
+// 分野ごとのサービス詳細（ログイン前でも閲覧可）
+async function openField(field) {
+  const cat = await loadCatalog();
+  const list = cat.filter((c) => c.field === field);
+  const m = modal(`
+    <div class="row" style="justify-content:space-between;align-items:flex-start;gap:12px">
+      <div class="row" style="gap:14px">${fieldPict(field, 'lg')}<div><div class="eyebrow">${list.length} SERVICES</div><h2 style="margin:6px 0 0">${esc(field)}</h2></div></div>
+      <button class="btn sm ghost" data-close>閉じる</button>
+    </div>
+    <p class="small muted" style="margin:14px 0 12px">サービスを選ぶと、対応方法と費用の考え方を表示します。</p>
+    <div class="svc" id="svc">${list.map((c, i) => `<button type="button" data-i="${i}">${esc(c.name)}</button>`).join('')}</div>
+    <div class="svcd" id="svcd"><p class="muted small" style="margin:0">上のサービスを選んでください。</p></div>
+    <div class="note" style="margin-top:16px">申込の時点では料金は発生しません。担当者が内容を確認して見積を提示し、同意をいただいてから対応します。</div>
+    <div class="row" style="margin-top:16px">${token ? '<a class="btn cta" href="#/support?f=' + encodeURIComponent(field) + '" data-close>この分野で申し込む <span>↗</span></a>' : '<button class="btn cta" id="tojoin">無料登録して申し込む <span>↗</span></button>'}</div>`, (el) => {
+    const show = (i) => {
+      const c = list[i];
+      el.querySelectorAll('#svc button').forEach((b) => b.classList.toggle('on', Number(b.dataset.i) === i));
+      $('#svcd', el).innerHTML = `<h3 style="margin:0 0 10px">${esc(c.name)}</h3>
+        <dl class="svcdl"><dt>対応</dt><dd>${esc(c.how)}</dd><dt>費用の負担</dt><dd>${esc(c.payer)}</dd><dt>備考</dt><dd>${esc(c.note)}</dd></dl>`;
+    };
+    $('#svc', el).onclick = (e) => { const b = e.target.closest('button'); if (b) show(Number(b.dataset.i)); };
+    if (list.length) show(0);
+    const tj = $('#tojoin', el);
+    if (tj) tj.onclick = () => { el.remove(); document.getElementById('join').scrollIntoView({ behavior: 'smooth' }); };
+  });
+  return m;
+}
+
 function renderAuth(mode = 'register') {
   document.body.classList.add('guest');
   view.innerHTML = `
@@ -229,7 +257,7 @@ function renderAuth(mode = 'register') {
     <div class="eyebrow">240 SUPPORTS.</div>
     <h1>人生のあらゆる場面に。</h1>
     <p>入院・介護から、住まい、手続き、言葉、ペットまで。21分野・240項目の生活支援から、必要なものを選んで申し込めます。</p>
-    <div class="fgrid">${FIELDS.map((f) => `<button type="button" data-go="join">${fieldPict(f, 'md')}<span>${esc(f)}</span></button>`).join('')}</div>
+    <div class="fgrid">${FIELDS.map((f) => `<button type="button" data-field="${esc(f)}">${fieldPict(f, 'md')}<span>${esc(f)}</span></button>`).join('')}</div>
   </section>
 
   <section class="lp band" id="lp-cert">
@@ -306,6 +334,7 @@ function renderAuth(mode = 'register') {
     <p class="small muted" style="margin-top:22px">NPO法人 GO TO HAPPY LIFE（現登記名 特定非営利活動法人 日本在宅看護普及会）／お問い合わせ info@115en.com／<a href="terms.html">利用規約</a>・<a href="privacy.html">プライバシーポリシー</a></p>
   </section>`;
   view.querySelectorAll('[data-go]').forEach((b) => (b.onclick = () => document.getElementById(b.dataset.go).scrollIntoView({ behavior: 'smooth' })));
+  view.querySelectorAll('[data-field]').forEach((b) => (b.onclick = () => openField(b.dataset.field)));
   view.querySelectorAll('[data-login]').forEach((b) => (b.onclick = () => { renderAuth('login'); document.getElementById('join').scrollIntoView(); }));
   view.querySelectorAll('.segs button').forEach((b) => (b.onclick = () => renderAuth(b.dataset.m)));
   bindSubmit($('#f'), async (o) => {

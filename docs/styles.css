@@ -461,3 +461,13 @@ body.guest .hero{max-width:1180px;margin:0 auto;padding:44px clamp(18px,4vw,60px
   .flow{grid-template-columns:1fr}.flow .connector{transform:rotate(90deg)}
   .lines{font-size:17px}
 }
+/* 分野のサービス詳細 */
+.modal .sheet{width:min(720px,100%)}
+.svc{display:flex;flex-wrap:wrap;gap:6px;max-height:210px;overflow:auto;padding:2px}
+.svc button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 13px;font-size:13px;cursor:pointer;font-family:var(--sans)}
+.svc button:hover{border-color:var(--ink)}
+.svc button.on{background:var(--ink);color:var(--paper2);border-color:var(--ink)}
+.svcd{margin-top:14px;border-top:1px solid var(--ink);padding-top:14px;min-height:120px}
+.svcdl{display:grid;grid-template-columns:7em 1fr;margin:0;font-size:14px}
+.svcdl dt,.svcdl dd{margin:0;padding:8px 4px;border-bottom:1px solid var(--line)}
+.svcdl dt{color:var(--stone);font-size:12.5px}
